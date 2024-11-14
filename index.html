@@ -1,182 +1,292 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- GOOGLE FONTS -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-    <!-- FIM GOOGLE FONTES -->
-    <!-- BOOTSTRAP ICONS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <!-- FIM BOOTSTRAP ICONS -->
-    <link rel="stylesheet" href="style.css">
-
-    <script src="menu.js" defer></script>
-
-    <title>PsychON</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro de Alunos e Responsáveis</title>
+  <style>
+    /* Estilo da página */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #003366;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      width: 400px; /* Ajuste da largura */
+      padding: 30px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+    .tabs {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 20px;
+      background-color: #f1f1f1;
+    }
+    .tab.active {
+      background-color: #0073e6;
+      color: #fff;
+    }
+    h2 {
+      color: #333;
+    }
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="email"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      padding-right: 35px; /* espaço para o ícone de olho */
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    input.error {
+      border-color: red;
+    }
+    .error-message {
+      color: red;
+      font-size: 0.9em;
+      display: none;
+      margin-top: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #0073e6;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+    .success-message {
+      color: green;
+      font-size: 0.9em;
+      margin-top: 10px;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+    }
+    /* Estilo do ícone de olho */
+    .password-container {
+      position: relative;
+    }
+    .eye-icon {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+    }
+  </style>
 </head>
 <body>
-    
-    <header>
-        <div class="interface">
-            <div class="logo">
-                <img src="/psychON/images/logo.png">
-            </div><!--logo-->
 
-            <nav class="menu-desktop">
-                <ul>
-                    <li><a href="#">home</a></li>
-                    <li><a href="#">sobre nós</a></li>
-                    <li><a href="#">contato</a></li>
-                </ul>
-            </nav>
+<div class="container">
+  <div class="tabs">
+    <div class="tab active" onclick="showPage('alunoPage')">Aluno</div>
+    <div class="tab" onclick="showPage('responsavelPage')">Responsável</div>
+  </div>
 
-            <div class="btn-contato">
-                <a href="#">
-                    <button>Entrar</button>
-                </a>
-            </div><!--btn-contato-->
+  <div id="alunoPage" class="form-page">
+    <h2>Cadastro de Aluno</h2>
+    <div class="form-group">
+      <label for="nomeAluno">Nome do Aluno</label>
+      <input type="text" id="nomeAluno" required>
+      <span class="error-message" id="nomeAlunoError">Campo obrigatório</span>
+    </div>
+    <div class="form-group">
+      <label for="matricula">Matrícula (até 8 caracteres)</label>
+      <input type="text" id="matricula" maxlength="8" required>
+      <span class="error-message" id="matriculaError">Campo obrigatório</span>
+    </div>
+    <div class="form-group">
+      <label for="emailAluno">Email do Responsável</label>
+      <input type="email" id="emailAluno" required>
+      <span class="error-message" id="emailAlunoError">Insira um e-mail válido com "@"</span>
+    </div>
+    <div class="form-group password-container">
+      <label for="senhaAluno">Senha</label>
+      <input type="password" id="senhaAluno" required>
+      <span class="eye-icon" onclick="togglePassword('senhaAluno')">👁️</span>
+      <span class="error-message" id="senhaAlunoError">Campo obrigatório</span>
+    </div>
+    <div class="checkbox-group">
+      <input type="checkbox" id="manterConectadoAluno">
+      <label for="manterConectadoAluno">Manter Conectado</label>
+    </div>
+    <button id="cadastrarAlunoBtn" onclick="cadastrarAluno()">Cadastrar Aluno</button>
+    <p class="success-message" id="alunoSuccess"></p>
+    <p id="alunoId"></p>
+  </div>
 
-            <div class="btn-abrir-menu" id="btn-menu">
-                <i class="bi bi-list"></i>
-            </div>
+  <div id="responsavelPage" class="form-page" style="display:none;">
+    <h2>Cadastro de Responsável</h2>
+    <div class="form-group">
+      <label for="nomeResponsavel">Nome</label>
+      <input type="text" id="nomeResponsavel" required>
+      <span class="error-message" id="nomeResponsavelError">Campo obrigatório</span>
+    </div>
+    <div class="form-group">
+      <label for="emailResponsavel">Email do Responsável</label>
+      <input type="email" id="emailResponsavel" required>
+      <span class="error-message" id="emailResponsavelError">Insira um e-mail válido com "@"</span>
+    </div>
+    <div class="form-group">
+      <label for="idAlunoResponsavel">ID do Aluno</label>
+      <input type="text" id="idAlunoResponsavel" required>
+      <span class="error-message" id="idAlunoResponsavelError">Campo obrigatório</span>
+    </div>
+    <div class="form-group password-container">
+      <label for="senhaResponsavel">Senha</label>
+      <input type="password" id="senhaResponsavel" required>
+      <span class="eye-icon" onclick="togglePassword('senhaResponsavel')">👁️</span>
+      <span class="error-message" id="senhaResponsavelError">Campo obrigatório</span>
+    </div>
+    <div class="checkbox-group">
+      <input type="checkbox" id="manterConectadoResponsavel">
+      <label for="manterConectadoResponsavel">Manter Conectado</label>
+    </div>
+    <button id="cadastrarResponsavelBtn" onclick="cadastrarResponsavel()">Cadastrar Responsável</button>
+    <p class="success-message" id="responsavelSuccess"></p>
+  </div>
+</div>
 
-            <div class="menu-mobile" id="menu-mobile">
-                <div class="btn-fechar">
-                    <i class="bi bi-x-lg"></i>
-                </div>
+<script>
+  let alunoID;
+  let alunoCadastrado = false;
+  let responsavelCadastrado = false;
 
-                <nav>
-                     <ul>
-                    <li><a href="#">home</a></li>
-                    <li><a href="#">sobre nós</a></li>
-                    <li><a href="#">contato</a></li>
-                </ul>
-                </nav>
+  function showPage(pageId) {
+    document.getElementById("alunoPage").style.display = pageId === "alunoPage" ? "block" : "none";
+    document.getElementById("responsavelPage").style.display = pageId === "responsavelPage" ? "block" : "none";
+    document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+    document.querySelector(`.tab[onclick="showPage('${pageId}')"]`).classList.add("active");
+  }
 
-            </div><!--menu-mobile-->
-            <div class="overlay-menu" id="overlay-menu"></div>
-        </div><!--interface-->
-    </header>
+  function cadastrarAluno() {
+    if (alunoCadastrado) return;
 
-    <main>
-        <section class="topo-do-site">
-            <div class="interface">
-                <div class="flex">
-                    <div class="txt-topo-site">
-                        <h1>SEJA BEM VINDO AO<span> PSHYON</span></h1>
-                        <p>Uma platarforma para promover o bem-estar e o acompanhamento emocional de estudantes e seus responsáveis</p>
+    const nomeAluno = document.getElementById("nomeAluno");
+    const matricula = document.getElementById("matricula");
+    const emailAluno = document.getElementById("emailAluno");
+    const senhaAluno = document.getElementById("senhaAluno");
 
-                        <div class="btn-contato">
-                            <a href="#">
-                                <button>Se cadastre aqui</button>
-                            </a>
-                        </div>
-                </div><!--flex-->
-            </div><!--interface-->
-        </section><!--topo-do-site-->
+    let valid = true;
 
-        <section class="especiliadades">
-            <div class="interface">
-                <h2 class="titulo">FRASES MOTIVACIONAIS</h2>
-                <div class="flex">
-                    <div class="especialidades-box">
-                        <i class="bi bi-star"></i>
-                        <h3>Sua Força Está em Você</h3>
-                        <p>Nos dias difíceis, lembre-se: a força que você precisa já está dentro de você. Use os desafios como degraus para crescer e seguir em frente.</p>
-                    </div><!--especialidades-box-->
+    // Validação dos campos de aluno
+    [nomeAluno, matricula, senhaAluno].forEach((input) => {
+      const errorMsg = document.getElementById(input.id + "Error");
+      if (input.value.trim() === "") {
+        errorMsg.style.display = "block";
+        input.classList.add("error");
+        valid = false;
+      } else {
+        errorMsg.style.display = "none";
+        input.classList.remove("error");
+      }
+    });
 
-                    <div class="especialidades-box">
-                        <i class="bi bi-stars"></i>
-                        <h3>Nunca Desista</h3>
-                        <p>Cada batalha vencida começa com a decisão de continuar. Descanse, mas nunca desista. Amanhã é uma nova chance para vencer.</p>
-                    </div><!--especialidades-box-->
+    // Validação do email
+    const emailErrorMsg = document.getElementById("emailAlunoError");
+    if (!emailAluno.value.includes("@")) {
+      emailErrorMsg.style.display = "block";
+      emailAluno.classList.add("error");
+      valid = false;
+    } else {
+      emailErrorMsg.style.display = "none";
+      emailAluno.classList.remove("error");
+    }
 
-                    <div class="especialidades-box">
-                        <i class="bi bi-star-fill"></i>
-                        <h3>Recomece Sempre</h3>
-                        <p>Todo amanhecer traz uma nova oportunidade. Não importa quantas vezes você caia, levante-se e continue. O progresso é feito de pequenos passos.</p>
-                    </div><!--especialidades-box-->
-                </div><!--flex-->
-            </div><!--interface-->
-        </section><!--especiliadades-->
+    if (!valid) return;
 
-        <section class="sobre">
-            <div class="interface">
-                <div class="flex">
-                    <div class="img-sobre">
-                        <img src="images/foto.png" alt="">
-                    </div><!--img-sobre-->
+    // Gerar ID do aluno e bloquear o botão de cadastro
+    alunoID = "ID" + Math.floor(1000 + Math.random() * 9000);
+    document.getElementById("alunoId").innerText = "ID do Aluno: " + alunoID;
+    document.getElementById("alunoSuccess").innerText = "Aluno cadastrado com sucesso!";
+    document.getElementById("cadastrarAlunoBtn").disabled = true;
+    alunoCadastrado = true;
+  }
 
-                    <div class="txt-sobre">
-                        <h2>MUITO PRAZER, <span>SOU BRUNO RODRIGUES.</span></h2>
-                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. At accusantium ducimus dicta suscipit, neque cumque sunt tenetur totam delectus magnam minus ratione. Quidem sequi velit voluptatibus eos omnis ullam officiis.</p>
-                        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam quidem quae iusto repellendus eaque, ipsum sed voluptate explicabo voluptas, dolorum porro sequi laudantium? Obcaecati quae, dolores illo officiis a numquam.</p>
-                        <div class="btn-social">
-                            <a href="#"><button><i class="bi bi-instagram"></i></button></a>
-                            <a href="#"><button><i class="bi bi-youtube"></i></button></a>
-                            <a href="#"><button><i class="bi bi-linkedin"></i></button></a>
-                        </div><!--btn-social-->
-                    </div><!--txt-sobre-->
-                </div><!--flex-->
-            </div><!--interface-->
-        </section><!--sobre-->
+  function cadastrarResponsavel() {
+    if (responsavelCadastrado) return;
 
-        <section class="portfolio">
-            <div class="interface">
-                <h2 class="titulo">MEU <span>PORTFÓLIO.</span></h2>
-                <div class="flex">
-                    <div class="img-port" style="background-image: url(images/imagem.jpg);">
-                        <div class="overlay">Projeto 1</div>
-                    </div>
-                    <div class="img-port" style="background-image: url(images/imagem.jpg);">
-                        <div class="overlay">Projeto 2</div>
-                    </div>
-                    <div class="img-port" style="background-image: url(images/imagem.jpg);">
-                        <div class="overlay">Projeto 3</div>
-                    </div>
-                </div><!--flex-->
-            </div><!--interface-->
-        </section><!--portfolio-->
+    const nomeResponsavel = document.getElementById("nomeResponsavel");
+    const emailResponsavel = document.getElementById("emailResponsavel");
+    const idAlunoResponsavel = document.getElementById("idAlunoResponsavel");
+    const senhaResponsavel = document.getElementById("senhaResponsavel");
 
-        <section class="formulario">
-            <div class="interface">
-                <h2 class="titulo">FALA <span>COMIGO.</span></h2>
+    let valid = true;
 
-                <form action="">
-                    <input type="text" name="" id="" placeholder="Seu nome completo:" required>
-                    <input type="text" name="" id="" placeholder="Seu e-mail:" required>
-                    <input type="text" name="" id="" placeholder="Seu celular:">
-                    <textarea name="" id="" placeholder="Sua mensagem" required></textarea>
-                    <div class="btn-enviar"><input type="submit" value="ENVIAR"></div>
-                </form>
-            </div><!--interface-->
-        </section><!--formulario-->
+    // Validação dos campos de responsável
+    [nomeResponsavel, idAlunoResponsavel, senhaResponsavel].forEach((input) => {
+      const errorMsg = document.getElementById(input.id + "Error");
+      if (input.value.trim() === "") {
+        errorMsg.style.display = "block";
+        input.classList.add("error");
+        valid = false;
+      } else {
+        errorMsg.style.display = "none";
+        input.classList.remove("error");
+      }
+    });
 
-    </main>
+    // Validação do email
+    const emailErrorMsg = document.getElementById("emailResponsavelError");
+    if (!emailResponsavel.value.includes("@")) {
+      emailErrorMsg.style.display = "block";
+      emailResponsavel.classList.add("error");
+      valid = false;
+    } else {
+      emailErrorMsg.style.display = "none";
+      emailResponsavel.classList.remove("error");
+    }
 
-    <footer>
-        <div class="interface">
-            <div class="line-footer">
-                <div class="flex">
-                    <div class="logo-footer">
-                        <img src="images/logo-projeto.png">
-                    </div><!--logo-footer-->
-                    <div class="btn-social">
-                        <a href="#"><button><i class="bi bi-instagram"></i></button></a>
-                        <a href="#"><button><i class="bi bi-youtube"></i></button></a>
-                        <a href="#"><button><i class="bi bi-linkedin"></i></button></a>
-                    </div><!--btn-social-->
-                </div>
-            </div><!--line-footer-->
+    if (!valid) return;
 
-            <div class="line-footer borda">
-                <p><i class="bi bi-envelope-fill"></i> <a href="mailto:contato@bruno.com.br">contato@bruno.com.br</a></p>
-            </div><!--line-footer-->
-        </div><!--interface-->
-    </footer>
+    // Verificação de ID do aluno e bloqueio do botão de cadastro
+    if (idAlunoResponsavel.value !== alunoID) {
+      alert("ID do Aluno incorreto!");
+      return;
+    }
+
+    document.getElementById("responsavelSuccess").innerText = "Responsável cadastrado com sucesso!";
+    document.getElementById("cadastrarResponsavelBtn").disabled = true;
+    responsavelCadastrado = true;
+  }
+
+  // Função para alternar a visibilidade da senha
+  function togglePassword(fieldId) {
+    const passwordField = document.getElementById(fieldId);
+    const fieldType = passwordField.getAttribute("type");
+    passwordField.setAttribute("type", fieldType === "password" ? "text" : "password");
+  }
+</script>
 
 </body>
 </html>
